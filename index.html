@@ -1,1 +1,278 @@
-<!DOCTYPE html><html><head><title>My Original Site</title></head><body><h1>Welcome to my site</h1></body></html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trixie B. Alas-as | Developer Portfolio</title>
+  <style>
+    :root{
+      --bg:#080b12;
+      --panel:#0f141d;
+      --panel2:#121925;
+      --text:#f4f7fb;
+      --muted:#9aa7b8;
+      --accent:#65d9ff;
+      --accent2:#8b7cff;
+      --border:rgba(255,255,255,.09);
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      background:
+        radial-gradient(circle at 85% 10%,rgba(101,217,255,.10),transparent 25%),
+        radial-gradient(circle at 10% 35%,rgba(139,124,255,.08),transparent 25%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{width:min(1120px,92%);margin:auto}
+    nav{
+      position:sticky;top:0;z-index:10;
+      background:rgba(8,11,18,.82);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-inner{height:70px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-weight:800;letter-spacing:.5px}
+    .logo span{color:var(--accent)}
+    .links{display:flex;gap:26px}
+    .links a{color:var(--muted);font-size:14px;transition:.25s}
+    .links a:hover{color:var(--accent)}
+    .hero{min-height:88vh;display:grid;place-items:center;padding:90px 0 70px}
+    .hero-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:60px;align-items:center}
+    .eyebrow{color:var(--accent);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:13px}
+    h1{font-size:clamp(42px,7vw,78px);line-height:1.02;margin:16px 0}
+    h1 span{color:transparent;-webkit-text-stroke:1px var(--accent)}
+    .hero p{max-width:650px;color:var(--muted);font-size:18px}
+    .buttons{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+    .btn{
+      padding:12px 20px;border:1px solid var(--border);border-radius:10px;
+      background:var(--panel);font-weight:700;transition:.25s
+    }
+    .btn.primary{background:var(--accent);color:#071019;border-color:var(--accent)}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(101,217,255,.15)}
+    .terminal{
+      background:#090d14;border:1px solid var(--border);border-radius:18px;
+      box-shadow:var(--shadow);overflow:hidden
+    }
+    .terminal-top{padding:12px 15px;border-bottom:1px solid var(--border);color:var(--muted);font-size:13px}
+    .terminal-body{padding:24px;font-family:Consolas,monospace;font-size:14px}
+    .green{color:#7ee787}.blue{color:var(--accent)}.purple{color:#b49aff}
+    section{padding:85px 0}
+    .section-title{margin-bottom:35px}
+    .section-title small{color:var(--accent);text-transform:uppercase;letter-spacing:2px}
+    .section-title h2{font-size:34px;margin-top:6px}
+    .about{display:grid;grid-template-columns:1fr 1fr;gap:25px}
+    .card{
+      background:linear-gradient(145deg,rgba(18,25,37,.95),rgba(12,16,24,.95));
+      border:1px solid var(--border);border-radius:18px;padding:28px;
+      box-shadow:0 10px 35px rgba(0,0,0,.15)
+    }
+    .card p{color:var(--muted)}
+    .facts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .fact{padding:18px;background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:12px}
+    .fact b{display:block;margin-bottom:4px}.fact span{color:var(--muted);font-size:14px}
+    .skills{display:flex;flex-wrap:wrap;gap:10px}
+    .tag{padding:9px 13px;border-radius:999px;background:#151d2a;border:1px solid var(--border);color:#dbe5f0;font-size:13px}
+    .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+    .project{position:relative;overflow:hidden}
+    .project::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(var(--accent),var(--accent2))}
+    .project h3{font-size:22px;margin-bottom:7px}
+    .project .type{color:var(--accent);font-size:13px;font-weight:700;margin-bottom:15px}
+    .project p{margin-bottom:18px}
+    .project-links{display:flex;gap:10px;flex-wrap:wrap}
+    .mini-btn{font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;color:var(--muted)}
+    .mini-btn:hover{color:var(--text);border-color:var(--accent)}
+    .learning{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .learn h3{margin-bottom:8px}.learn p{font-size:14px}
+    .contact{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .contact-item{display:flex;gap:15px;align-items:center;padding:20px;border:1px solid var(--border);border-radius:14px;background:var(--panel)}
+    .icon{width:42px;height:42px;display:grid;place-items:center;border-radius:10px;background:#172130;color:var(--accent);font-weight:800}
+    footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);text-align:center;font-size:13px}
+    .reveal{animation:fadeUp .7s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    @media(max-width:800px){
+      .links{display:none}
+      .hero-grid,.about,.contact{grid-template-columns:1fr}
+      .projects{grid-template-columns:1fr}
+      .learning{grid-template-columns:1fr}
+      .hero{padding-top:65px}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="logo" href="#home">Trixie<span>.</span></a>
+    <div class="links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#learning">Learning</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero" id="home">
+    <div class="container hero-grid">
+      <div class="reveal">
+        <div class="eyebrow">BSIT Student • Aspiring Developer</div>
+        <h1>Hi, I'm <span>Trixie B. Alas-as</span></h1>
+        <p>
+          I'm an Information Technology student building practical projects,
+          improving my programming skills, and exploring web development and UI/UX design.
+        </p>
+        <div class="buttons">
+          <a class="btn primary" href="#projects">View Projects</a>
+          <a class="btn" href="https://github.com/alasastrixie6-boop" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <div class="terminal reveal">
+        <div class="terminal-top">trixie@portfolio:~$</div>
+        <div class="terminal-body">
+          <div><span class="green">const</span> developer = {</div>
+          <br>
+          <div>&nbsp;&nbsp;name: <span class="blue">"Trixie B. Alas-as"</span>,</div>
+          <div>&nbsp;&nbsp;role: <span class="blue">"Aspiring Developer"</span>,</div>
+          <div>&nbsp;&nbsp;focus: <span class="blue">"Building & Learning"</span>,</div>
+          <div>&nbsp;&nbsp;mindset: <span class="purple">"Keep Improving"</span></div>
+          <div>};</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <div class="section-title">
+        <small>01 / About</small>
+        <h2>Getting to know me</h2>
+      </div>
+      <div class="about">
+        <div class="card">
+          <p>
+            I'm a Bachelor of Science in Information Technology student interested in
+            programming, web development, and user interface design. I enjoy learning
+            through school projects and hands-on practice. My goal is to keep building
+            my foundation in technology and grow into a capable software developer.
+          </p>
+        </div>
+        <div class="facts">
+          <div class="fact"><b>Education</b><span>Bachelor of Science in Information Technology</span></div>
+          <div class="fact"><b>Focus</b><span>Programming & Web Development</span></div>
+          <div class="fact"><b>Mindset</b><span>Perseverance</span></div>
+          <div class="fact"><b>Learning</b><span>Continuous Improvement</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="container">
+      <div class="section-title">
+        <small>02 / Skills</small>
+        <h2>Technologies I've worked with</h2>
+      </div>
+      <div class="card">
+        <div class="skills">
+          <span class="tag">C++</span><span class="tag">C#</span><span class="tag">Java</span>
+          <span class="tag">PHP</span><span class="tag">HTML</span><span class="tag">CSS</span>
+          <span class="tag">JavaScript</span><span class="tag">Git</span><span class="tag">GitHub</span>
+          <span class="tag">Visual Studio</span><span class="tag">VS Code</span>
+          <span class="tag">Figma</span><span class="tag">Canva</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <div class="section-title">
+        <small>03 / Projects</small>
+        <h2>Things I've built</h2>
+      </div>
+      <div class="projects">
+
+        <article class="card project">
+          <div class="type">C# • Desktop Application</div>
+          <h3>AFTER_EXAM</h3>
+          <p>A local tracking pipeline containing functional laboratory tasks and post-examination coding solutions.</p>
+          <div class="skills"><span class="tag">C#</span><span class="tag">Windows Forms</span><span class="tag">Visual Studio</span></div>
+          <br>
+          <div class="project-links"><a class="mini-btn" href="#">Repository — Add Link</a></div>
+        </article>
+
+        <article class="card project">
+          <div class="type">Java • OOP</div>
+          <h3>NSTP</h3>
+          <p>Civic information architecture maps and digital data tracking schemas deployed directly to structure academic assets cleanly.</p>
+          <div class="skills"><span class="tag">Java</span><span class="tag">OOP</span></div>
+          <br>
+          <div class="project-links">
+            <a class="mini-btn" href="https://www.facebook.com/share/v/18Q2rcyDLs/" target="_blank">Documentation</a>
+          </div>
+        </article>
+
+        <article class="card project">
+          <div class="type">HTML • CSS • JavaScript</div>
+          <h3>VLOG</h3>
+          <p>Technical resource management layouts deployed to coordinate digital presentation pipelines.</p>
+          <div class="skills"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+          <br>
+          <div class="project-links"><a class="mini-btn" href="#">Repository — Add Link</a></div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="learning">
+    <div class="container">
+      <div class="section-title">
+        <small>04 / Currently Learning</small>
+        <h2>Always improving</h2>
+      </div>
+      <div class="learning">
+        <div class="card learn"><h3>Programming</h3><p>Improving my fundamentals in C++, C#, Java, and PHP through practice and projects.</p></div>
+        <div class="card learn"><h3>Web Development</h3><p>Learning how HTML, CSS, and JavaScript work together to create useful web applications.</p></div>
+        <div class="card learn"><h3>Software Development</h3><p>Learning better Git/GitHub workflows, documentation, clean code, and practical application development.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="section-title">
+        <small>05 / Contact</small>
+        <h2>Let's connect</h2>
+      </div>
+      <div class="contact">
+        <a class="contact-item" href="https://github.com/alasastrixie6-boop" target="_blank">
+          <div class="icon">GH</div>
+          <div><b>GitHub</b><p>github.com/alasastrixie6-boop</p></div>
+        </a>
+        <a class="contact-item" href="mailto:alasastrixie6@gmail.com">
+          <div class="icon">@</div>
+          <div><b>Email</b><p>alasastrixie6@gmail.com</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">© 2026 Trixie B. Alas-as • Built with HTML & CSS</div>
+</footer>
+
+</body>
+</html>
+
